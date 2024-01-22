@@ -216,22 +216,18 @@ class Maze():
                 return
 
             # Mark node as explored
-
-            ''' your code goes here '''
+            self.explored.add(node.state)
 
             # Add neighbors to frontier
             for action, state in self.neighbors(node.state):
-                ''' your code goes here '''
-
-                # No Priority
-                child = Node(state=state, parent=node, action=action, cost=node.cost + 1)
-                frontier.add(child)  # add back
-
-                # Priority  - need to add the appropriate code to
-                # in case for using PriorityQueue
-
-                # priority = add you code              # use if PQ
-                # frontier.add(child, priority)        # use if PQ
+                if state not in self.explored and not frontier.contains_state(state):
+                    child = Node(state=state, parent=node, action=action, cost=node.cost + 1)
+                    # Priority
+                    if isinstance(frontier, PriorityQueue):
+                        frontier.add(child, child.cost)
+                    # No Priority
+                    else:
+                        frontier.add(child)
 
     def output_image(self, filename, show_solution=True, show_explored=False):
         from PIL import Image, ImageDraw
