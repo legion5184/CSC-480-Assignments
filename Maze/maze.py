@@ -86,8 +86,7 @@ class PriorityQueue:
 
 def manhattanDistance(xy1, xy2):
     "Returns the Manhattan distance between points xy1 and xy2"
-    ''' Your Code goes here'''
-
+    return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
     # xy1 + xy2
 
 
@@ -178,13 +177,13 @@ class Maze():
         # Choose the appropriate data structure for the frontier
         # used for search from the three below
 
-        frontier = StackFrontier()
+        # frontier = StackFrontier()
         # frontier = QueueFrontier()
-        # frontier = PriorityQueue()
+        frontier = PriorityQueue()
 
         # slightly different code if using Priority Queue
-        frontier.add(start)  # no priority
-        # frontier.add(start, 100)  #  priority
+        # frontier.add(start)  # no priority
+        frontier.add(start, 100)  #  priority
 
         # Initialize an empty explored set
         self.explored = set()
@@ -224,7 +223,8 @@ class Maze():
                     child = Node(state=state, parent=node, action=action, cost=node.cost + 1)
                     # Priority
                     if isinstance(frontier, PriorityQueue):
-                        frontier.add(child, child.cost)
+                        priority = child.cost + manhattanDistance(child.state, self.goal)
+                        frontier.add(child, priority)
                     # No Priority
                     else:
                         frontier.add(child)
