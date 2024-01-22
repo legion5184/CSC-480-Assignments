@@ -10,7 +10,9 @@ class Node():
         self.cost = cost
 
     def __lt__(self, other): return id(self) < id(other)
+
     def __le__(self, other): return id(self) <= id(other)
+
 
 class StackFrontier():
     def __init__(self):
@@ -37,11 +39,13 @@ class StackFrontier():
 class QueueFrontier(StackFrontier):  # Only need to implement remove
 
     def remove(self):
-
         '''Your code goes here'''
-
-
-
+        if self.empty():
+            raise Exception("empty frontier")
+        else:
+            node = self.frontier[0]
+            self.frontier = self.frontier[1:]
+            return node
 
 
 
@@ -80,10 +84,11 @@ class PriorityQueue:
         return len(self.heap) == 0
 
 
-
 def manhattanDistance(xy1, xy2):
     "Returns the Manhattan distance between points xy1 and xy2"
     ''' Your Code goes here'''
+
+    # xy1 + xy2
 
 
 class Maze():
@@ -160,7 +165,6 @@ class Maze():
                 result.append((action, (r, c)))
         return result
 
-
     def solve(self):
         """Finds a solution to maze, if one exists.
            Complete the following code where indicated"""
@@ -179,9 +183,8 @@ class Maze():
         # frontier = PriorityQueue()
 
         # slightly different code if using Priority Queue
-        frontier.add(start)    # no priority
+        frontier.add(start)  # no priority
         # frontier.add(start, 100)  #  priority
-
 
         # Initialize an empty explored set
         self.explored = set()
@@ -194,23 +197,23 @@ class Maze():
                 raise Exception("no solution")
 
             # Choose a node from the frontier
-            #   node = frontier.remove()
+            node = frontier.remove()
             self.num_explored += 1
 
             # If node is the goal, then have a solution
-            # and  must reconstruct the path
+            # and must reconstruct the path
             if node.state == self.goal:
+                # Initialize action and cells
                 actions = []
                 cells = []
-
-            ''' your code goes here '''
-
-
-
-            actions.reverse()
-            cells.reverse()
-            self.solution = (actions, cells)  # solution is not local
-            return
+                while node.parent is not None:
+                    actions.append(node.action)
+                    cells.append(node.state)
+                    node = node.parent
+                actions.reverse()
+                cells.reverse()
+                self.solution = (actions, cells)  # solution is not local
+                return
 
             # Mark node as explored
 
@@ -218,12 +221,11 @@ class Maze():
 
             # Add neighbors to frontier
             for action, state in self.neighbors(node.state):
-
                 ''' your code goes here '''
 
                 # No Priority
                 child = Node(state=state, parent=node, action=action, cost=node.cost + 1)
-                frontier.add(child)                                                  # add back
+                frontier.add(child)  # add back
 
                 # Priority  - need to add the appropriate code to
                 # in case for using PriorityQueue
